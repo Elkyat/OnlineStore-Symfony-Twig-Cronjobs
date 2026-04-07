@@ -2,41 +2,44 @@
 
 {% block title %}Mi tienda{% endblock %}
 
+{# Llevamos el script al bloque correspondiente #}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/main.js') }}"></script>
+{% endblock %}
+
 {% block body %}
-<h1>Mi tienda</h1>
+<div class="max-w-6xl mx-auto px-4 py-8">
 
-<a href="{{ path('product_new') }}">➕ Crear producto</a>
+    <h1 class="text-3xl font-bold mb-6">Mi tienda</h1>
 
-<div class="product-grid">
+    <p>
+        Estado: <span id="tags">{{ product.status ?? 'Sin estado' }}</span>
+    </p>
 
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
     {% for product in products %}
-        <div class="product">
-            <img src="{{ product.image ?? 'https://via.placeholder.com/250' }}">
+        <div 
+            onclick="expandGridElement(this)"
+    class="product-card bg-white rounded-2x1 shadow-md p-4 hover:shadow-xl transition-all duration-300 cursor-pointer md:col-span-1"
+        >
+            <img 
+                src="{{ product.image ?? 'https://via.placeholder.com/250' }}" 
+                class="w-full h-48 object-cover rounded-lg mb-4"
+            >
 
-            <h3>{{ product.name }}</h3>
+            <h3 class="text-lg font-semibold mb-2 italic">{{ product.name }}</h3>
 
-            <p>{{ product.description }}</p>
+            <p class="text-gray-600 font-bold text-sm mb-2">{{ product.description }}</p>
 
-            <p>${{ product.price }}</p>
+            <span class="inline-block bg-gray-200 text-gray-700 text-xs font-bold italic px-3 py-1 rounded-full shadow-sm transform -skew-x-12 select-none">
+                {{ product.tag }}
+            </span>
 
-            <div class="actions">
-                <a href="{{ path('product_show', {id: product.id}) }}">
-                    <button>Ver</button>
-                </a>
-
-                <a href="{{ path('product_edit', {id: product.id}) }}">
-                    <button>Editar</button>
-                </a>
-
-                <form method="post" action="{{ path('product_delete', {id: product.id}) }}" style="display:inline;">
-                    <button type="submit">Eliminar</button>
-                </form>
-            </div>
+            <p class="text-xl font-bold text-green-600">${{ product.price }}</p>
         </div>
-    {% else %}
-        <p>No hay productos cargados.</p>
     {% endfor %}
-
 </div>
 
+</div>
 {% endblock %}
